@@ -26,7 +26,6 @@ export const setIngredients = (ingredients) => {
         return {
             type:actionType.SET_INGREDIENT,
             ingredients:ingredients
-
         };
 };
 // fetching ingredient from data base. 
@@ -41,3 +40,5 @@ export const initIngredients = () => {
             });
     };
 };
+
+

@@ -21,6 +21,7 @@ const reducer = (state=initialState,action) => {
                 loading:true
             }
         case actionTypes.PURCHASE_BURGER_SUCCESS:
+           
             const newOrder = {
                 ...action.orderData,
                 id:action.orderId
@@ -29,9 +30,10 @@ const reducer = (state=initialState,action) => {
                 ...state,
                 loading:false,
                 purchased:true,
-                orders:state.orders.concat(newOrder)
+                orders:typeof(state.orders)=='undefined'?[]:state.orders.concat(newOrder)
             };
         case actionTypes.PURCHASE_BURGER_FAIL:
+            console.log(action.error)
             return {
                 ...state,
                 loading:false

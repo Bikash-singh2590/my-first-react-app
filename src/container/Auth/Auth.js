@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/button';
 import classes from './Auth.module.css';
-
+import * as actions from '../../Store/actions/index';
+import { connect } from 'react-redux'
 class Auth extends Component {
     state = {
         controls: {
@@ -37,40 +38,46 @@ class Auth extends Component {
         }
     }
 
-    checkValidity(value,rules){
+    checkValidity(value, rules) {
         let isValid = true;
-        if(rules.required){
+        if (rules.required) {
             isValid = value.trim() !== '' && isValid;
         }
-        if(rules.minLength){
-            isValid = value.length >= rules.minLength  && isValid;
+        if (rules.minLength) {
+            isValid = value.length >= rules.minLength && isValid;
         }
-        if(rules.maxLength){
-            isValid = value.length <= rules.maxLength  && isValid;
+        if (rules.maxLength) {
+            isValid = value.length <= rules.maxLength && isValid;
         }
-        if(rules.isEmail){
+        if (rules.isEmail) {
             const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             isValid = pattern.test(value) && isValid
         }
-        if(rules.isNumber){
+        if (rules.isNumber) {
             const pattern = /^\d+$/;
             isValid = pattern.test(value) && isValid
         }
         return isValid;
-   }
+    }
 
-    inputChangeHandler = (event,controlName) =>{
+    inputChangeHandler = (event, controlName) => {
         const updatedControls = {
             ...this.state.controls,
-            [controlName]:{
+            [controlName]: {
                 ...this.state.controls[controlName],
-                value:event.target.value,
-                valid:this.checkValidity(event.target.value,this.state.controls[controlName].validation),
-                touched:true
+                value: event.target.value,
+                valid: this.checkValidity(event.target.value, this.state.controls[controlName].validation),
+                touched: true
             }
         };
-        this.setState({controls:updatedControls})
-    }    
+        this.setState({ controls: updatedControls })
+    }
+
+    submitHandler = (event) => {
+        event.preventDefault();
+        this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value)
+
+    }
     render() {
         const formElementsArray = [];
         for (let key in this.state.controls) {
@@ -92,10 +99,9 @@ class Auth extends Component {
                 changed={(event) => this.inputChangeHandler(event, formElement.id)}
             />
         ))
-
         return (
             <div className={classes.Auth}>
-                <form>
+                <form onSubmit={this.submitHandler}>
                     {form}
                     <Button btnType="Success">SUBMIT </Button>
                 </form>
@@ -103,4 +109,9 @@ class Auth extends Component {
         );
     }
 }
-export default Auth;
+const mapDispatchToProps = dispatch => {
+    return {
+        onAuth: (email, password) => dispatch(actions.auth(email, password))
+    };
+};
+export default connect(null, mapDispatchToProps)(Auth);

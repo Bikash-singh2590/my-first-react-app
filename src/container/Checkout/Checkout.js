@@ -29,7 +29,6 @@ class Checkout extends Component {
                     />
                     <Route path={this.props.match.path + '/contact-data'}
                         component={ContactData} />
-
                 </div>
             )
         }
@@ -44,5 +43,6 @@ const mapStateToProps = state => {
         purchased: state.order.purchased
     }
 }
+
 
 export default connect(mapStateToProps)(Checkout);

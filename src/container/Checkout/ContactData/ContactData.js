@@ -47,7 +47,8 @@ class ContactData extends Component {
                 validation:{
                     required:true,
                     maxLength:5,
-                    minLength:5
+                    minLength:5,
+                    isNumber:true
                 },
                 valid:false,
                 touched:false
@@ -73,7 +74,8 @@ class ContactData extends Component {
                 },
                 value:'',
                 validation:{
-                    required:true
+                    required:true,
+                    isEmail:true
                 },
                 valid:false,
                 touched:false
@@ -121,6 +123,14 @@ class ContactData extends Component {
         if(rules.maxLength){
             isValid = value.length <= rules.maxLength  && isValid;
         }
+        if(rules.isEmail){
+            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            isValid = pattern.test(value) && isValid
+        }
+        if(rules.isNumber){
+            const pattern = /^\d+$/;
+            isValid = pattern.test(value) && isValid
+        }
         return isValid;
    }
 
@@ -163,7 +173,7 @@ class ContactData extends Component {
                    invalid={!formElement.config.valid}
                    shouldValidate={formElement.config.validation}
                    touched = {formElement.config.touched }
-                    changed={(event)=>this.inputChangeHandler(event,formElement.id)}/>
+                changed={(event)=>this.inputChangeHandler(event,formElement.id)}/>
                ))}
                 <Button btnType="Success" disabled={!this.state.formIsValid}>ORDER</Button>
             </form>
